@@ -1,11 +1,15 @@
+<div align="center">
+  
+# Security Advisory: SourceCodester Online Banking System v1.0
+
+[![Packet Storm](https://img.shields.io/badge/Packet%20Storm-Advisory%20Published-blue?logo=security&logoColor=white)](https://packetstorm.news/files/id/213712)
 ![Severity](https://img.shields.io/badge/Severity-Critical-red)
 ![Status](https://img.shields.io/badge/Status-Unpatched%20(0--Day)-orange)
-![Vulnerabilities](https://img.shields.io/badge/Vulnerabilities-5-blue)
 
-# SourceCodester-Banking-CVE
-Syntropy Security's comprehensive security audit of the Online Banking Management System v1.0. Our assessment concludes that the application in its current state poses unacceptable risk to the organization. We identified five (5) critical security failures that would cause catastrophic financial loss and total operational paralysis if deployed.
+> **"Nice research! You drove a bus through this..."**
+> — *Packet Storm Security Staff*
 
-# Security Advisory: Critical Financial Flaws in SourceCodester Online Banking System
+</div>
 
 | **Advisory Property** | **Details** |
 | :--- | :--- |
@@ -17,42 +21,51 @@ Syntropy Security's comprehensive security audit of the Online Banking Managemen
 | **Date** | January 2026 |
 
 ## 1. Executive Summary
-Syntropy Security has identified five (5) critical architectural vulnerabilities in the SourceCodester Online Banking Management System v1.0. These flaws demonstrate a complete breakdown of financial security controls, allowing for Remote Code Execution (RCE), unlimited currency generation, double-spending attacks, and administrative account takeover.
+Syntropy Security has identified five (3 Critical + 2 High) architectural vulnerabilities in the SourceCodester Online Banking System v1.0. These vulnerabilities demonstrate a complete breakdown of financial security controls. The flaws allow unauthenticated remote attackers to execute arbitrary code (RCE), bypass business logic to generate unlimited funds, and hijack administrative sessions.
 
-This repository serves as a technical case study on financial application security failures.
+Due to the severity of these findings (including Remote Code Execution and Financial Fraud), immediate remediation is recommended.
 
 ## 2. Vulnerability Index and Proof of Concept
+The technical evidence for these findings is distributed across a comprehensive PDF report, specific exploit scripts, and video demonstrations.
 
 | Vulnerability Type | Severity | CVE ID | Proof Artifacts & Documentation |
 | :--- | :--- | :--- | :--- |
-| **Remote Code Execution (RCE)**<br>*(Authenticated SQL Injection)* | **Critical** | *Pending* | • 📄 [**PDF Report (Section C)**](Syntropy_Security_Banking_Report.pdf)<br>• 📜 [**Exploit Summary**](Full_Chain_Exploit_Summary.txt)<br>• 📺 [**Watch Video PoC**](https://youtu.be/Rk1HRvvMxLI) |
-| **Financial Logic Error**<br>*(Integer Overflow / Negative Transfer)* | **Critical** | *Pending* | • 📄 [**PDF Report (Section A)**](Syntropy_Security_Banking_Report.pdf)<br>• 📺 [**Watch Video PoC**](https://youtu.be/e6i0nSJLwXE) |
-| **Concurrency Failure (Race Condition)**<br>*(Double Spending Attack)* | **Critical** | *Pending* | • 📄 [**PDF Report (Section B)**](Syntropy_Security_Banking_Report.pdf)<br>• 🐍 [**Python Script**](Race_Condition_Exploit.py)<br>• 📺 [**Watch Video PoC**](https://youtu.be/Hc6NieYza48) |
-| **Broken Access Control (IDOR)**<br>*(Unauthorized Dashboard Access)* | **High** | *Pending* | • 📄 [**PDF Report (Section D)**](Syntropy_Security_Banking_Report.pdf)<br>• 📺 [**Watch Video PoC**](https://youtu.be/EXjJOA8HusY) |
-| **Stored Cross-Site Scripting (XSS)**<br>*(Session Hijacking in Logs)* | **High** | *Pending* | • 📄 [**PDF Report (Section E)**](Syntropy_Security_Banking_Report.pdf)<br>• 📺 [**Watch Video PoC**](https://youtu.be/wEMU8p6ky8A) |
+| **Remote Code Execution (RCE)**<br>*(Authenticated SQL Injection)* | **Critical** | *Pending* | • [**PDF Report (Section C)**](Syntropy_Security_Banking_Report.pdf)<br>• [**Exploit Summary**](Full_Chain_Exploit_Summary.txt)<br>• [**Video Demonstration**](https://youtu.be/Rk1HRvvMxLI) |
+| **Financial Logic Error**<br>*(Integer Overflow / Negative Transfer)* | **Critical** | *Pending* | • [**PDF Report (Section A)**](Syntropy_Security_Banking_Report.pdf)<br>• [**Video Demonstration**](https://youtu.be/e6i0nSJLwXE) |
+| **Concurrency Failure (Race Condition)**<br>*(Double Spending Attack)* | **Critical** | *Pending* | • [**PDF Report (Section B)**](Syntropy_Security_Banking_Report.pdf)<br>• [**Python Exploit (Race_Condition_Exploit.py)**](Race_Condition_Exploit.py)<br>• [**Video Demonstration**](https://youtu.be/Hc6NieYza48) |
+| **Broken Access Control (IDOR)**<br>*(Unauthorized Dashboard Access)* | **High** | *Pending* | • [**PDF Report (Section D)**](Syntropy_Security_Banking_Report.pdf)<br>• [**Video Demonstration**](https://youtu.be/EXjJOA8HusY) |
+| **Stored Cross-Site Scripting (XSS)**<br>*(Session Hijacking in Logs)* | **High** | *Pending* | • [**PDF Report (Section E)**](Syntropy_Security_Banking_Report.pdf)<br>• [**Video Demonstration**](https://youtu.be/wEMU8p6ky8A) |
 
-## 3. Reproduction Environment
-To assist researchers in verifying these findings, we have provided an automated bash script to deploy the vulnerable environment locally.
-* **Lab Setup Script:** [`Lab_setup_script.sh`](Lab_setup_script.sh)
-* **Setup Tutorial:** 📺 [**Watch Lab Setup Video**](https://youtu.be/5bIYRRtWE_0)
+## 3. Technical Analysis
+### 3.1 Remote Code Execution (CWE-89)
+The application allows authenticated users to inject arbitrary SQL commands via the `transfer.php` endpoint. Specifically, the `otherNo` parameter allows for `INTO OUTFILE` injection, enabling an attacker to write a PHP web shell to the server document root and achieve full system compromise.
 
-## 4. Technical Analysis
-### 4.1 Remote Code Execution (CWE-89)
-The application allows authenticated users to inject arbitrary SQL commands via the `transfer.php` endpoint (`otherNo` parameter). This can be escalated to RCE by writing a PHP web shell to the server using `SELECT ... INTO OUTFILE`.
+### 3.2 Financial Integrity Failures (CWE-190 & CWE-362)
+* **Integer Overflow:** The transfer logic fails to validate negative inputs. Authenticated users can transfer negative amounts (e.g., -500), effectively stealing funds from other accounts.
+* **Race Condition:** The transaction processing logic lacks atomic database locks (e.g., `FOR UPDATE`), allowing attackers to send simultaneous requests to spend the same balance multiple times (Double Spending).
 
-### 4.2 Financial Integrity Failures (CWE-190 & CWE-362)
-* **Integer Overflow:** The transfer logic fails to validate negative inputs, allowing users to "transfer" negative amounts (effectively stealing funds).
-* **Race Condition:** The transaction processing logic lacks atomic locks (e.g., `FOR UPDATE`), allowing parallel requests to spend the same balance multiple times.
+### 3.3 Access Control Failures (CWE-639 & CWE-79)
+Administrative dashboards (`mindex.php`) are accessible to unprivileged users via Forced Browsing (IDOR). Additionally, the audit logs (`feedback.php`) are vulnerable to Stored XSS, allowing attackers to hijack administrator sessions by injecting malicious JavaScript into feedback forms.
 
-### 4.3 Access Control Failures (CWE-639 & CWE-79)
-Administrative dashboards (`mindex.php`) are accessible to unprivileged users via IDOR, and audit logs are vulnerable to Stored XSS (`feedback.php`), allowing attackers to hijack administrator sessions.
+## 4. Remediation Recommendations
+This software is fundamentally insecure and should **not** be used in any production environment. Administrators are advised to:
+1.  **Network Isolation:** Restrict access to the banking panel to trusted IP addresses only.
+2.  **Web Application Firewall (WAF):** Deploy rules to block SQL injection patterns and negative integer inputs.
+3.  **Code Revision:**
+    * Wrap all balance updates in `START TRANSACTION` ... `COMMIT` blocks.
+    * Reject all negative numbers at the API level.
+    * Rewrite all queries using `mysqli_prepare()`.
 
-## 5. Remediation Recommendations
-This software is fundamentally insecure and should **not** be used in any production environment. For educational remediation:
-1.  **Use Transactions:** Wrap all balance updates in `START TRANSACTION` ... `COMMIT` blocks.
-2.  **Input Validation:** Reject all negative numbers at the API level.
-3.  **Prepared Statements:** Rewrite all queries using `mysqli_prepare()`.
-
-## 6. Credits
+## 5. Credits
 **Research & Discovery:** Sankalp Devidas Hanwate
 **Organization:** Syntropy Security
+
+---
+###  Citation & Reference
+**Permanent Link:** [Packet Storm Security Advisory](https://packetstorm.news/files/id/213712)
+
+**Researcher:** Sankalp Devidas Hanwate (Syntropy Security)
+
+**License:** Educational Use / Responsible Disclosure
+
+*To leverage this research for penetration testing or security training, please link back to this repository.*
