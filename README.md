@@ -60,6 +60,34 @@ This software is fundamentally insecure and should **not** be used in any produc
 **Research & Discovery:** Sankalp Devidas Hanwate
 **Organization:** Syntropy Security
 
+## 5. Remediation & Patch Analysis
+The vendor has not released a patch. Below is the required code-level remediation for developers.
+
+### 🛡️ Vulnerable vs. Secure Code Diff
+
+**SQL Injection Fix (Use PDO):**
+
+```
+// VULNERABLE:
+$sql = "SELECT * FROM doctors WHERE specilization = '".$_POST['specilizationid']."'";
+
+// SECURE:
+$stmt = $pdo->prepare("SELECT * FROM doctors WHERE specilization = :specid");
+$stmt->execute(['specid' => $_POST['specilizationid']]);
+```
+**Access Control Fix (Session Validation):**
+
+```
+// VULNERABLE:
+// No check at top of admin files.
+
+// SECURE (Add to top of every /admin/ file):
+session_start();
+if ($_SESSION['role'] !== 'admin') {
+    header("Location: /login.php");
+    exit();
+}
+```
 ---
 ###  Citation & Reference
 **Permanent Link:** [Packet Storm Security Advisory](https://packetstorm.news/files/id/213712)
